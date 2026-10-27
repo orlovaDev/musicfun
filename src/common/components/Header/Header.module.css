@@ -1,6 +1,6 @@
 .container {
   border-bottom: 1px solid black;
-  padding-left: 100px;
+  padding: 30px 0 30px 100px;
 }
 
 .list {

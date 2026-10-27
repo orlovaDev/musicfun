@@ -3,3 +3,30 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* 2. Сброс для кнопок (чтобы они не выглядели как серые кирпичи из 90-х) */
+button {
+  cursor: pointer;
+  background: transparent;
+  font: inherit;
+}
+
+/* 3. Чтобы сайт растягивался на всю высоту экрана */
+/*html, body {*/
+/*  height: 100%;*/
+/*}*/
+
