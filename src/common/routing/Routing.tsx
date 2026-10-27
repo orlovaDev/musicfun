@@ -1,18 +1,10 @@
-import { MainPage } from "@/app/ui/MainPage/MainPage.tsx"
-import { PlaylistsPage } from "@/features/playlists/ui/PlaylistsPage/PlaylistsPage.tsx"
-import { TracksPage } from "@/features/tracks/ui/TracksPage/TracksPage.tsx"
-import { ProfilePage } from "@/features/auth/ui/ProfilePage/ProfilePage.tsx"
-import { PageNotFound } from "@/common/components/PageNotFound/PageNotFound.tsx"
 import { Route, Routes } from "react-router"
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const Path = {
-  Main: "/",
-  Playlists: "/playlists",
-  Tracks: "/tracks",
-  Profile: "/profile",
-  NotFound: "*",
-} as const
+import { MainPage } from "@/app/ui/MainPage"
+import { PlaylistsPage } from "@/features/playlists/ui/PlaylistsPage"
+import { TracksPage } from "@/features/tracks/ui/TracksPage"
+import { ProfilePage } from "@/features/auth/ui/ProfilePage"
+import { PageNotFound } from "@/common/components"
+import { Path } from "@/common/constants"
 
 export const Routing = () => (
   <Routes>
