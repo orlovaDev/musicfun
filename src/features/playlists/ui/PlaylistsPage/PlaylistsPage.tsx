@@ -1,11 +1,16 @@
-import { useDeletePlaylistMutation, useFetchPlaylistsQuery } from "@/features/playlists/api/playlistsApi.ts"
+import {
+  useDeletePlaylistMutation,
+  useFetchPlaylistsQuery,
+  useUpdatePlaylistMutation,
+} from "@/features/playlists/api/playlistsApi.ts"
 import s from "./PlaylistsPage.module.css"
 import { CreatePlaylistForm } from "@/features/playlists/ui/PlaylistsPage/CreatePlaylistForm/CreatePlaylistForm.tsx"
+import type { UpdatePlaylistArgs } from "@/features/playlists/api/playlistsApi.types.ts"
 
 export const PlaylistsPage = () => {
   const { data } = useFetchPlaylistsQuery()
   const [deletePlaylist] = useDeletePlaylistMutation()
-  // const [updatePlaylist] = useUpdatePlaylistMutation()
+  const [updatePlaylist] = useUpdatePlaylistMutation()
 
   const deletePlaylistHandler = (playlistId: string) => {
     if (confirm("Are you sure you want to delete the playlist?")) {
@@ -13,15 +18,19 @@ export const PlaylistsPage = () => {
     }
   }
 
-  // const updatePlaylistHandler = ({ playlistId: string, data }) => {
-  //   const requestBody: UpdatePlaylistArgs = {
-  //     data: {
-  //       type: "playlists",
-  //       attributes: data,
-  //     },
-  //   }
-  //   updatePlaylist({ playlistId, requestBody })
-  // }
+  const updatePlaylistHandler = (playlistId: string) => {
+    const requestPayload: UpdatePlaylistArgs = {
+      data: {
+        type: "playlists",
+        attributes: {
+          title: "1",
+          description: "2",
+          tagIds: [],
+        },
+      },
+    }
+    updatePlaylist({ playlistId, body: requestPayload })
+  }
 
   return (
     <div className={s.container}>
@@ -41,13 +50,13 @@ export const PlaylistsPage = () => {
               >
                 delete
               </button>
-              {/*<button*/}
-              {/*  onClick={() => {*/}
-              {/*    updatePlaylistHandler(playlist.id)*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  update*/}
-              {/*</button>*/}
+              <button
+                onClick={() => {
+                  updatePlaylistHandler(playlist.id)
+                }}
+              >
+                update
+              </button>
             </div>
           )
         })}

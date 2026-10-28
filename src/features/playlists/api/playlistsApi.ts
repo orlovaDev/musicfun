@@ -4,7 +4,7 @@ import type {
   CreatePlaylistArgs,
   PlaylistData,
   PlaylistsResponse,
-  UpdatePlaylistAttributes,
+  UpdatePlaylistArgs,
 } from "@/features/playlists/api/playlistsApi.types.ts"
 
 // `createApi` - функция из `RTK Query`, позволяющая создать объект `API`
@@ -38,7 +38,7 @@ export const playlistsApi = createApi({
     deletePlaylist: build.mutation<void, string>({
       query: (playlistId) => ({ method: "DELETE", url: `playlists/${playlistId}` }),
     }),
-    updatePlaylist: build.mutation<void, { playlistId: string; body: UpdatePlaylistAttributes }>({
+    updatePlaylist: build.mutation<void, { playlistId: string; body: UpdatePlaylistArgs }>({
       query: ({ playlistId, body }) => ({ method: "PUT", url: `playlists/${playlistId}`, body }),
     }),
   }),
