@@ -4,7 +4,6 @@ import type {
   CreatePlaylistArgs,
   PlaylistData,
   PlaylistsResponse,
-  UpdatePlaylistArgs,
   UpdatePlaylistAttributes,
 } from "@/features/playlists/api/playlistsApi.types.ts"
 
