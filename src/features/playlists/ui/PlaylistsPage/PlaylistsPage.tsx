@@ -5,9 +5,18 @@ import {
 } from "@/features/playlists/api/playlistsApi.ts"
 import s from "./PlaylistsPage.module.css"
 import { CreatePlaylistForm } from "@/features/playlists/ui/PlaylistsPage/CreatePlaylistForm/CreatePlaylistForm.tsx"
-import type { UpdatePlaylistArgs } from "@/features/playlists/api/playlistsApi.types.ts"
+import type {
+  PlaylistData,
+  UpdatePlaylistArgs,
+  UpdatePlaylistAttributes,
+} from "@/features/playlists/api/playlistsApi.types.ts"
+import { type SubmitHandler, useForm } from "react-hook-form"
+import { useState } from "react"
 
 export const PlaylistsPage = () => {
+  const [playlistId, setPlaylistId] = useState<string | null>(null)
+  const { register, handleSubmit, reset } = useForm<UpdatePlaylistAttributes>()
+
   const { data } = useFetchPlaylistsQuery()
   const [deletePlaylist] = useDeletePlaylistMutation()
   const [updatePlaylist] = useUpdatePlaylistMutation()
@@ -18,18 +27,35 @@ export const PlaylistsPage = () => {
     }
   }
 
-  const updatePlaylistHandler = (playlistId: string) => {
-    const requestPayload: UpdatePlaylistArgs = {
+  const editPlaylistHandler = (playlist: PlaylistData | null) => {
+    if (playlist) {
+      setPlaylistId(playlist.id)
+      reset({
+        title: playlist.attributes.title,
+        description: playlist.attributes.description,
+        tagIds: playlist.attributes.tags.map((tag) => tag.id),
+      })
+    } else {
+      setPlaylistId(null)
+    }
+  }
+
+  const onSubmit: SubmitHandler<UpdatePlaylistAttributes> = (formData) => {
+    const requestBody: UpdatePlaylistArgs = {
       data: {
         type: "playlists",
-        attributes: {
-          title: "1",
-          description: "2",
-          tagIds: [],
-        },
+        attributes: formData,
       },
     }
-    updatePlaylist({ playlistId, body: requestPayload })
+    if (!playlistId) return
+    updatePlaylist({
+      body: requestBody,
+      playlistId: playlistId,
+    })
+      .unwrap()
+      .then(() => {
+        setPlaylistId(null)
+      })
   }
 
   return (
@@ -38,25 +64,45 @@ export const PlaylistsPage = () => {
       <CreatePlaylistForm />
       <div className={s.items}>
         {data?.data.map((playlist) => {
+          const isEditing = playlist.id === playlistId
+
           return (
             <div className={s.item} key={playlist.id}>
-              <div>title: {playlist.attributes.title}</div>
-              <div>description: {playlist.attributes.description}</div>
-              <div>userName: {playlist.attributes.user.name}</div>
-              <button
-                onClick={() => {
-                  deletePlaylistHandler(playlist.id)
-                }}
-              >
-                delete
-              </button>
-              <button
-                onClick={() => {
-                  updatePlaylistHandler(playlist.id)
-                }}
-              >
-                update
-              </button>
+              {isEditing ? (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <h2>Edit playlist</h2>
+                  <div>
+                    <input {...register("title")} placeholder={"title"} />
+                  </div>
+                  <div>
+                    <input {...register("description")} placeholder={"description"} />
+                  </div>
+                  <button type={"submit"}>save</button>
+                  <button type={"button"} onClick={() => editPlaylistHandler(null)}>
+                    cancel
+                  </button>
+                </form>
+              ) : (
+                <div>
+                  <div>title: {playlist.attributes.title}</div>
+                  <div>description: {playlist.attributes.description}</div>
+                  <div>userName: {playlist.attributes.user.name}</div>
+                  <button
+                    onClick={() => {
+                      deletePlaylistHandler(playlist.id)
+                    }}
+                  >
+                    delete
+                  </button>
+                  <button
+                    onClick={() => {
+                      editPlaylistHandler(playlist)
+                    }}
+                  >
+                    update
+                  </button>
+                </div>
+              )}
             </div>
           )
         })}
