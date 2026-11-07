@@ -34,6 +34,12 @@ export const playlistsApi = baseApi.injectEndpoints({
       query: ({ playlistId, body }) => ({ method: "PUT", url: `playlists/${playlistId}`, body }),
       invalidatesTags: ["Playlist"],
     }),
+    uploadPlaylistCover: build.mutation<any, any>({
+      query: ({ playlistId, body }) => {
+        return { method: "{POST}", url: `playlists/${playlistId}/images/main`, body }
+      },
+      invalidatesTags: ["Playlist"],
+    }),
   }),
 })
 
