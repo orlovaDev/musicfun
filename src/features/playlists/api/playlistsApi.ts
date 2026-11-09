@@ -6,6 +6,7 @@ import type {
   UpdatePlaylistArgs,
 } from "@/features/playlists/api/playlistsApi.types.ts"
 import { baseApi } from "@/app/api/baseApi.ts"
+import type { Images } from "@/common/types"
 
 // `createApi` - функция из `RTK Query`, позволяющая создать объект `API`
 // для взаимодействия с внешними `API` и управления состоянием приложения
@@ -34,9 +35,11 @@ export const playlistsApi = baseApi.injectEndpoints({
       query: ({ playlistId, body }) => ({ method: "PUT", url: `playlists/${playlistId}`, body }),
       invalidatesTags: ["Playlist"],
     }),
-    uploadPlaylistCover: build.mutation<any, any>({
-      query: ({ playlistId, body }) => {
-        return { method: "{POST}", url: `playlists/${playlistId}/images/main`, body }
+    uploadPlaylistCover: build.mutation<Images, { playlistId: string; file: File }>({
+      query: ({ playlistId, file }) => {
+        const formData = new FormData()
+        formData.append("file", file)
+        return { method: "POST", url: `playlists/${playlistId}/images/main`, body: formData }
       },
       invalidatesTags: ["Playlist"],
     }),
@@ -50,4 +53,5 @@ export const {
   useCreatePlaylistMutation,
   useDeletePlaylistMutation,
   useUpdatePlaylistMutation,
+  useUploadPlaylistCoverMutation,
 } = playlistsApi
