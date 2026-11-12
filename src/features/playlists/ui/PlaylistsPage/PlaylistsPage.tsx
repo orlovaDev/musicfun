@@ -7,12 +7,15 @@ import { useState } from "react"
 import { PlaylistItem } from "@/features/playlists/ui/PlaylistsPage/PlaylistItem/PlaylistItem.tsx"
 import { EditPlaylistForm } from "@/features/playlists/ui/PlaylistsPage/EditPlaylistForm/EditPlaylistForm.tsx"
 import { useDebounceValue } from "@/common/hooks"
+import { Pagination } from "@/common/components"
 
 export const PlaylistsPage = () => {
   const [search, setSearch] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(2)
 
   const debounceSearch = useDebounceValue(search)
-  const { data, isLoading } = useFetchPlaylistsQuery({ search: debounceSearch })
+  const { data, isLoading } = useFetchPlaylistsQuery({ search: debounceSearch, pageNumber: currentPage, pageSize })
 
   const [playlistId, setPlaylistId] = useState<string | null>(null)
   const { register, handleSubmit, reset } = useForm<UpdatePlaylistAttributes>()
@@ -35,6 +38,11 @@ export const PlaylistsPage = () => {
     } else {
       setPlaylistId(null)
     }
+  }
+
+  const changePageSizeHandler = (size: number) => {
+    setCurrentPage(1)
+    setPageSize(size)
   }
 
   return (
@@ -72,6 +80,13 @@ export const PlaylistsPage = () => {
           )
         })}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        pagesCount={data?.meta.pagesCount || 1}
+        pageSize={pageSize}
+        changePageSize={changePageSizeHandler}
+      />
     </div>
   )
 }
