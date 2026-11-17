@@ -10,3 +10,5 @@ export const store = configureStore({
 })
 
 setupListeners(store.dispatch) // для RefetchOnFocus и RefetchOnReconnect, без этой строчки работать не будет
+
+export type RootState = ReturnType<typeof store.getState>
