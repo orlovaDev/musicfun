@@ -2,7 +2,7 @@ import { Routing } from "@/common/routing"
 import { Header, LinearProgress } from "@/common/components"
 import s from "./App.module.css"
 import { ToastContainer } from "react-toastify"
-import { useGlobalLoading } from "@/common/hooks/useGlobalLoading.ts"
+import { useGlobalLoading } from "@/common/hooks"
 
 export const App = () => {
   const isGlobalLoading = useGlobalLoading()

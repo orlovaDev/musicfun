@@ -9,6 +9,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 })
 
-setupListeners(store.dispatch) // для RefetchOnFocus и RefetchOnReconnect, без этой строчки работать не будет
-
 export type RootState = ReturnType<typeof store.getState>
+
+setupListeners(store.dispatch) // для RefetchOnFocus и RefetchOnReconnect, без этой строчки работать не будет

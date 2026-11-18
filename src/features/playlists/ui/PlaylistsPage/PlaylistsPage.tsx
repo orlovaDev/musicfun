@@ -3,7 +3,7 @@ import s from "./PlaylistsPage.module.css"
 import { CreatePlaylistForm } from "@/features/playlists/ui/PlaylistsPage/CreatePlaylistForm/CreatePlaylistForm.tsx"
 import { type ChangeEvent, useState } from "react"
 import { useDebounceValue } from "@/common/hooks"
-import { LinearProgress, Pagination } from "@/common/components"
+import { Pagination } from "@/common/components"
 import { PlaylistsList } from "@/features/playlists/ui/PlaylistsPage/PlaylistsList/PlaylistsList.tsx"
 
 export const PlaylistsPage = () => {
@@ -12,7 +12,7 @@ export const PlaylistsPage = () => {
   const [pageSize, setPageSize] = useState(8)
 
   const debounceSearch = useDebounceValue(search)
-  const { data, isLoading, isFetching } = useFetchPlaylistsQuery(
+  const { data, isLoading } = useFetchPlaylistsQuery(
     { search: debounceSearch, pageNumber: currentPage, pageSize },
     // { refetchOnFocus: true, refetchOnReconnect: true }, // pollingInterval: 3000, skipPollingIfUnfocused: true
   )
@@ -32,10 +32,9 @@ export const PlaylistsPage = () => {
   return (
     <div className={s.container}>
       <h1>Playlists page</h1>
-      <CreatePlaylistForm />
+      <CreatePlaylistForm onPlaylistCreated={() => setCurrentPage(1)} />
       <input type="search" placeholder={"Search playlist by title"} onChange={searchPlaylistHandler} />
       <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading} />
-      {isFetching && <LinearProgress />}
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
